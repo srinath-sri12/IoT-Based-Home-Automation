@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+
+body, html {
+  height: 100%;
+  margin: 0; 
+}
+body{
+  /* The image used */
+  
+  background-image: url("https://www.hiddenbrains.com/blog/wp-content/uploads/2018/11/Home-Automation-and-IoT-min.jpg");
+  background-size: 100%;
+  background-color: #7f8c8d ;
+  margin-left: 90px;
+  margin-right:50px;
+  margin-top:30px;
+ 
+
+  
+  weigdth: 100%; 
+
+  
+ }
+
+h1{
+color:	yellow;
+}
+button{
+padding:10px;
+color:black;
+background-color:#00FFFF;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: gray;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color:#FFEFD5;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #0000FF;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 28px;
+  
+}
+
+.slider.round:before {
+  border-radius: 50%;
+
+
+</style>
+</head>
+<body>
+
+<p align="right"><button onclick="getData()">REFRESH</button></p><h1>LIGHT : </h1>
+
+<label class="switch">
+  <input type="checkbox" id="light4"  onchange="post('light4')">
+  <span class="slider round"></span>
+</label>
+<br>
+<br>
+<script>
+function post(id){
+ var status=document.getElementById(id).checked;
+ 
+  var postData = {};
+  postData.id = id;
+  postData.status=status;
+
+  $.ajax({
+      type: 'POST',
+      url: "http://localhost:8080/HomeAutomation/DeviceServlet",
+      data: postData,
+      dataType: "text",
+      success: function(resultData) { alert("Save Complete") }
+  });
+
+}
+
+
+
+function post(id){
+ var status=document.getElementById(id).checked;
+ 
+  var postData = {};
+  postData.id = id;
+  postData.status=status;
+
+  $.ajax({
+      type: 'POST',
+      url: "http://localhost:8080/HomeAutomation/DeviceServlet",
+      data: postData,
+      dataType: "text",
+      success: function(resultData) { alert("Save Complete") }
+  });
+
+}
+
+
+</script>
+<br>
+<br>
+<h1>FAN: </h1>
+<label class="switch">
+  <input type="checkbox" id="fan"  onchange="post('fan')">
+  <span class="slider round"></span>
+</label>
+
+<script>
+function post(id){
+ var status=document.getElementById(id).checked;
+ 
+  var postData = {};
+  postData.id = id;
+  postData.status=status;
+
+  $.ajax({
+      type: 'POST',
+      url: "http://localhost:8080/HomeAutomation/DeviceServlet",
+      data: postData,
+      dataType: "text",
+      success: function(resultData) { alert("Save Complete") }
+  });
+
+}
+
+
+</script>
+<br>
+<br>
+
+<script>
+function getData(){
+  var xhttp = new XMLHttpRequest();
+
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this);
+    	console.log("data came");
+       var res = this.responseText.split(",");
+       console.log(res[0]+res[1])
+       for(var i=0;i<res.length;i++)
+       {    var res1=res[i].split(":");console.log("device="+res1[0]); 
+       console.log("Status="+res1[1])
+       var device=res1[0]; 
+       var status=false;
+       if(res1[1]=="true")
+       {
+	status=true;
+       }
+       document.getElementById(device).checked=status;
+      }	   
+}
+  };
+  xhttp.open("GET", 'http://localhost:8080/HomeAutomation/DeviceServlet', true);
+  xhttp.send();
+}
+
+</script>
+</body>
+</html> 
